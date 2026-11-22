@@ -1,0 +1,223 @@
+
+<%-- Shared navigation for MovieBook pages --%>
+<%
+    String navUserName = (String) session.getAttribute("userName");
+    String navAdminName = (String) session.getAttribute("adminUsername");
+    String navContext = request.getContextPath();
+
+    boolean isCustomer = navUserName != null && !navUserName.trim().isEmpty();
+    boolean isAdmin = navAdminName != null && !navAdminName.trim().isEmpty();
+%>
+
+<style>
+    .navbar {
+        min-height: 76px;
+        padding: 14px 7%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+        background: rgba(15, 13, 26, 0.97);
+        border-bottom: 1px solid #292337;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(14px);
+    }
+
+    .navbar .logo {
+        color: #a78bfa;
+        font-size: 27px;
+        font-weight: 900;
+        letter-spacing: -1px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.25s;
+    }
+
+    .navbar .logo:hover {
+        color: #c4a8ff;
+        transform: scale(1.02);
+    }
+
+    .navbar .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 27px;
+        flex-wrap: wrap;
+    }
+
+    .navbar .nav-links > a {
+        color: #e0dbea;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.25s ease;
+    }
+
+    .navbar .nav-links > a:hover {
+        color: #b18aff;
+    }
+
+    .navbar .hello {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #b18aff;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .navbar .nav-links form {
+        display: inline-flex;
+        margin: 0;
+    }
+
+    /* Register button */
+    .navbar .nav-links .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 20px;
+        border: 1px solid #9568f5;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #8254ee, #a16bfa);
+        color: #ffffff !important;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .navbar .nav-links .nav-btn:hover {
+        background: linear-gradient(135deg, #9568f5, #b18aff);
+        box-shadow: 0 5px 18px rgba(145, 91, 239, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Dedicated Logout button */
+    .navbar .nav-links .nav-logout-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 88px;
+        padding: 11px 19px;
+        border: 1px solid #9568f5;
+        border-radius: 10px;
+        background: #8254ee !important;
+        color: #ffffff !important;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.25s ease;
+    }
+
+    .navbar .nav-links .nav-logout-btn:hover {
+        background: #a16bfa !important;
+        border-color: #b18aff;
+        box-shadow: 0 5px 18px rgba(145, 91, 239, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .navbar .nav-links .nav-logout-btn:focus-visible {
+        outline: 3px solid rgba(177, 138, 255, 0.4);
+        outline-offset: 3px;
+    }
+
+    @media (max-width: 850px) {
+        .navbar {
+            padding: 16px 5%;
+            flex-wrap: wrap;
+        }
+
+        .navbar .nav-links {
+            gap: 17px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .navbar {
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .navbar .nav-links {
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .navbar .nav-links > a {
+            font-size: 13px;
+        }
+
+        .navbar .logo {
+            font-size: 25px;
+        }
+    }
+</style>
+
+<nav class="navbar">
+
+    <a class="logo" href="<%= navContext %>/index.jsp">
+        &#127916; MovieBook
+    </a>
+
+    <div class="nav-links">
+
+        <a href="<%= navContext %>/index.jsp#movies">Movies</a>
+
+        <% if (isCustomer) { %>
+
+            <a href="<%= navContext %>/MyBookings">My Bookings</a>
+
+            <span class="hello">
+                &#128100; <%= util.HtmlUtil.esc(navUserName) %>
+            </span>
+
+            <form action="<%= navContext %>/LogoutServlet" method="post">
+                <button type="submit" class="nav-logout-btn">
+                    Logout
+                </button>
+            </form>
+
+        <% } else if (isAdmin) { %>
+
+            <a href="<%= navContext %>/admin-dashboard.jsp">
+                Admin Dashboard
+            </a>
+
+            <span class="hello">
+                &#128100; <%= util.HtmlUtil.esc(navAdminName) %>
+            </span>
+
+            <form action="<%= navContext %>/LogoutServlet" method="post">
+                <button type="submit" class="nav-logout-btn">
+                    Logout
+                </button>
+            </form>
+
+        <% } else { %>
+
+            <a href="<%= navContext %>/customer-login.jsp">
+                Customer Login
+            </a>
+
+            <a href="<%= navContext %>/register.jsp" class="nav-btn">
+                Register
+            </a>
+
+            <a href="<%= navContext %>/admin-login.jsp">
+                Admin Login
+            </a>
+
+        <% } %>
+
+    </div>
+
+</nav>
